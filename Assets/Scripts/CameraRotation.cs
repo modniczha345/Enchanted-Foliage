@@ -4,20 +4,22 @@ using UnityEngine;
 
 public class CameraRotation : MonoBehaviour
 {
-    public float rotationSpeed = 100.0f; // скорость поворота камеры
-    public float minY = -60.0f; // минимальный угол поворота по оси Y
-    public float maxY = 60.0f; // максимальный угол поворота по оси Y
+    public Transform CameraAxisTransform;
+    public float minAngle;
+    public float maxAngle;
 
-    private float rotationY = 0.0f; // текущий угол поворота по оси Y
+    public float RotationSpeed;
+    void Start()
+    {
 
+    }
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X"); // получаем скорость мышки по оси X
-        float mouseY = Input.GetAxis("Mouse Y"); // получаем скорость мышки по оси Y
+        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + Time.deltaTime * RotationSpeed * Input.GetAxis("Mouse X"), 0);
 
-        rotationY -= mouseY * rotationSpeed * Time.deltaTime; // изменяем угол поворота по оси Y
-        rotationY = Mathf.Clamp(rotationY, minY, maxY); // ограничиваем угол поворота по оси Y в пределах minY и maxY
+        var newAngleX = CameraAxisTransform.localEulerAngles.x - Time.deltaTime * RotationSpeed * Input.GetAxis("Mouse Y");
+        newAngleX = Mathf.Clamp(newAngleX, minAngle, maxAngle);
 
-        transform.localEulerAngles = new Vector3(rotationY, transform.localEulerAngles.y + mouseX * rotationSpeed * Time.deltaTime, 0); // применяем поворот камеры
+        CameraAxisTransform.localEulerAngles = new Vector3(newAngleX, 0, 0);
     }
 }
