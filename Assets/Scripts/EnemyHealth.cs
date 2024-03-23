@@ -6,8 +6,16 @@ public class EnemyHealth : MonoBehaviour
 {
     public float speed;
     public float lifetime;
-    public float health = 100; // Добавили поле health
-    public float damage = 10; // Уменьшили урон, чтобы не убивать врага с одного удара
+    public float health = 100;
+    public float damage = 10;
+    public int experienceValue = 10;
+    public PlayerProgress playerProgress;
+    public Explosion explosionPrefab;
+
+    private void Start()
+    {
+        playerProgress = FindObjectOfType<PlayerProgress>();
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -20,12 +28,14 @@ public class EnemyHealth : MonoBehaviour
         var enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
         if (enemyHealth != null)
         {
-            enemyHealth.TakeDamage(damage); // Вызываем метод TakeDamage()
+            enemyHealth.DealDamage(damage); 
         }
     }
 
-    public void TakeDamage(float damage) // Добавили метод TakeDamage()
+    public void DealDamage(float damage)
     {
+        playerProgress.AddExperience(experienceValue); 
+
         health -= damage;
         if (health <= 0)
         {
