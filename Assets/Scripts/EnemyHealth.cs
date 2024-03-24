@@ -6,11 +6,12 @@ public class EnemyHealth : MonoBehaviour
 {
     public float speed;
     public float lifetime;
-    public float health = 100;
+    public float health = 400; // Обновить это значение
     public float damage = 10;
     public int experienceValue = 10;
     public PlayerProgress playerProgress;
     public Explosion explosionPrefab;
+    public GameObject fireball; // Добавить это поле
 
     private void Start()
     {
@@ -19,22 +20,29 @@ public class EnemyHealth : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        DamageEnemy(collision);
-        DestroyFireball();
+        if (collision.gameObject == fireball) // Добавить эту строку
+        {
+            DealDamage(100); // Добавить эту строку
+            DestroyFireball();
+        }
+        else
+        {
+            DamageEnemy(collision);
+        }
     }
 
     private void DamageEnemy(Collision collision)
     {
         var enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
-        if (enemyHealth != null)
+        if (enemyHealth == null) // Добавить эту строку
         {
-            enemyHealth.DealDamage(damage); 
+            DealDamage(damage); // Обновить эту строку
         }
     }
 
     public void DealDamage(float damage)
     {
-        playerProgress.AddExperience(experienceValue); 
+        playerProgress.AddExperience(experienceValue);
 
         health -= damage;
         if (health <= 0)
@@ -45,6 +53,6 @@ public class EnemyHealth : MonoBehaviour
 
     private void DestroyFireball()
     {
-        Destroy(gameObject);
+        Destroy(fireball); // Обновить эту строку
     }
 }

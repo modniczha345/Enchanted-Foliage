@@ -8,9 +8,10 @@ public class EnemyAI : MonoBehaviour
     public PlayerController player;
     public float viewAngle;
     public float damage;
+    public float viewDistance; // Add this line
     private NavMeshAgent _navMeshAgent;
     private bool _isPlayerNoticed;
-    private PlayerHealth _playerHealth; 
+    private PlayerHealth _playerHealth;
 
     private void Start()
     {
@@ -42,7 +43,7 @@ public class EnemyAI : MonoBehaviour
     {
         var direction = player.transform.position - transform.position;
         _isPlayerNoticed = false;
-        if (Vector3.Angle(transform.forward, direction) < viewAngle)
+        if (Vector3.Angle(transform.forward, direction) < viewAngle && direction.magnitude <= viewDistance) // Update this line
         {
             RaycastHit hit;
             if (Physics.Raycast(transform.position + Vector3.up, direction, out hit))
@@ -51,7 +52,6 @@ public class EnemyAI : MonoBehaviour
                 {
                     _isPlayerNoticed = true;
                 }
-
             }
         }
     }
